@@ -3,17 +3,17 @@
  */
 package com.guysshare.finance;
 
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.StringReader;
-import java.io.UnsupportedEncodingException;
+import java.util.List;
 
-import com.guysshare.finance.models.db.FinanceDBHelper;
-import com.guysshare.managers.AssetsManager;
-import com.guysshare.managers.GlobalManager;
-import com.guysshare.publics.IOUtils;
+import com.guysshare.finance.models.db.DBColumns;
+import com.guysshare.finance.models.db.DBManager;
+import com.guysshare.finance.models.db.DBHelper;
+import com.guysshare.finance.models.stocklist.StockBaseData;
+import com.guysshare.finance.models.stocklist.StockDataManager;
+import com.guysshare.finance.models.stocklist.StockURLManager;
 
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -28,6 +28,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ListView;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import rx.Observable;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class AppMainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -46,17 +54,8 @@ public class AppMainActivity extends AppCompatActivity
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
 
-                FinanceDBHelper dbHelper = new FinanceDBHelper(GlobalManager.mAppContext,FinanceDBHelper
-                        .PATH_FINANCE_MAIN_DB,null,FinanceDBHelper.DB_VERSION);
-                dbHelper.getWritableDatabase();
-                dbHelper.close();
             }
         });
-
-
-
-
-
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -66,7 +65,13 @@ public class AppMainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        ListView stocksListView = (ListView) findViewById(R.id.id_main_stock_list);
+
+
     }
+
+
 
     @Override
     public void onBackPressed() {
@@ -117,6 +122,38 @@ public class AppMainActivity extends AppCompatActivity
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {
+
+
+            Observable.create(new Observable.OnSubscribe<List>() {
+                @Override
+                public void call(Subscriber<? super List> subscriber) {
+                    try {
+                        List<StockBaseData> mList = new StockDataManager().getCurrStockDatas(20);
+                        subscriber.onNext(mList);
+                        subscriber.onCompleted();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        subscriber.onError(e);
+                    }
+                }
+            })
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(new Subscriber<List>() {
+                @Override
+                public void onCompleted() {
+
+                }
+
+                @Override
+                public void onError(Throwable e) {
+
+                }
+
+                @Override
+                public void onNext(List s) {
+                }
+            });
 
         }
 

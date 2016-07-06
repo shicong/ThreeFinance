@@ -20,18 +20,18 @@ import android.util.Log;
 /**
  * Created by shicong on 2016/6/30.
  */
-public class FinanceDBHelper extends SQLiteOpenHelper{
+public class DBHelper extends SQLiteOpenHelper{
 
-    public final static String PATH_FINANCE_MAIN_DB = "aa.db";
+    public final static String PATH_FINANCE_MAIN_DB = "stocks.db";
     public final static int DB_VERSION = 1;
 
-    public FinanceDBHelper(Context context, String name,
-                           SQLiteDatabase.CursorFactory factory, int version) {
+    public DBHelper(Context context, String name,
+                    SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);
     }
 
-    public FinanceDBHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version,
-                           DatabaseErrorHandler errorHandler) {
+    public DBHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version,
+                    DatabaseErrorHandler errorHandler) {
         super(context, name, factory, version, errorHandler);
     }
 

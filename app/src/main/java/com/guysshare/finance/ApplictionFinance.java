@@ -15,8 +15,10 @@ public class ApplictionFinance extends Application implements Thread.UncaughtExc
     @Override
     public void onCreate() {
         super.onCreate();
-        GlobalManager.mAppContext = getApplicationContext();
+        GlobalManager.initGlobals(this);
     }
+
+
 
     @Override
     public void uncaughtException(Thread thread, Throwable ex) {
