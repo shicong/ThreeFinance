@@ -6,6 +6,7 @@ package com.guysshare.finance;
 import com.guysshare.managers.GlobalManager;
 
 import android.app.Application;
+import android.service.notification.NotificationListenerService;
 
 /**
  * Created by shicong on 2016/6/30.

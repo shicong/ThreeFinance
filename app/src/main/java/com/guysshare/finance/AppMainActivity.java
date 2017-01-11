@@ -3,162 +3,110 @@
  */
 package com.guysshare.finance;
 
-import java.io.IOException;
-import java.util.List;
+import java.util.ArrayList;
 
-import com.guysshare.finance.models.db.DBColumns;
-import com.guysshare.finance.models.db.DBManager;
-import com.guysshare.finance.models.db.DBHelper;
+import com.guysshare.finance.controllers.AllStockListFragment;
+import com.guysshare.finance.controllers.AppMainFragmentAdapter;
+import com.guysshare.finance.controllers.DIYStockListFragment;
+import com.guysshare.finance.controllers.IViewPageInterface;
+import com.guysshare.finance.controllers.ModuleRepoFragment;
 import com.guysshare.finance.models.stocklist.StockBaseData;
 import com.guysshare.finance.models.stocklist.StockDataManager;
 import com.guysshare.finance.models.stocklist.StockURLManager;
 
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+import android.app.ProgressDialog;
+import android.graphics.Color;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.support.annotation.WorkerThread;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
-import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.ListView;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-import rx.Observable;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
+import android.widget.LinearLayout;
 
-public class AppMainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+public class AppMainActivity extends FragmentActivity implements ViewPager.OnPageChangeListener,IViewPageInterface,
+        View.OnClickListener {
 
+    private ArrayList<Fragment> mPageFragments;
+    private LinearLayout mMainPageTitles;
+    private ViewPager mMainPages;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        setContentView(R.layout.appmain);
+        initDatas();
+        initViews();
+        updateDBData();
+    }
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+    private void initDatas(){
+        mPageFragments = new ArrayList<Fragment>();
+        mPageFragments.add(new DIYStockListFragment());
+        mPageFragments.add(new AllStockListFragment());
+        mPageFragments.add(new ModuleRepoFragment());
+    }
 
+    private void initViews(){
+        mMainPages = (ViewPager) findViewById(R.id.id_appmain_pages);
+        mMainPages.setAdapter(new AppMainFragmentAdapter(getSupportFragmentManager(),this));
+        mMainPages.addOnPageChangeListener(this);
+        mMainPages.setCurrentItem(0);
+
+
+        mMainPageTitles = (LinearLayout) findViewById(R.id.id_appmain_titles);
+        mMainPageTitles.getChildAt(0).setBackgroundColor(Color.YELLOW);
+        for (int i = 0; i < mPageFragments.size(); i++){
+            mMainPageTitles.getChildAt(i).setOnClickListener(this);
+        }
+    }
+
+    private void updateDBData(){
+        new StockDataManager(StockDataManager.DataType.TYPE_JD).updateToGlobalStockDataList(new int[]{0,1,2000});
+    }
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+        for (int i = 0; i < mPageFragments.size(); i++){
+            if (i == position){
+                mMainPageTitles.getChildAt(i).setBackgroundColor(Color.YELLOW);
+            }else {
+                mMainPageTitles.getChildAt(i).setBackgroundColor(Color.TRANSPARENT);
             }
-        });
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-
-        ListView stocksListView = (ListView) findViewById(R.id.id_main_stock_list);
-
-
-    }
-
-
-
-    @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
         }
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
+    public void onPageScrollStateChanged(int state) {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
+    public ArrayList<Fragment> getFragementList() {
+        return mPageFragments;
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
+    public StockBaseData getStockBaseData() {
+        return null;
+    }
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
-
-            Observable.create(new Observable.OnSubscribe<List>() {
-                @Override
-                public void call(Subscriber<? super List> subscriber) {
-                    try {
-                        List<StockBaseData> mList = new StockDataManager().getCurrStockDatas(20);
-                        subscriber.onNext(mList);
-                        subscriber.onCompleted();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        subscriber.onError(e);
-                    }
-                }
-            })
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(new Subscriber<List>() {
-                @Override
-                public void onCompleted() {
-
-                }
-
-                @Override
-                public void onError(Throwable e) {
-
-                }
-
-                @Override
-                public void onNext(List s) {
-                }
-            });
-
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+        switch (id){
+            case R.id.id_appmain_page_diy:
+                mMainPages.setCurrentItem(0);
+                break;
+            case R.id.id_appmain_page_all:
+                mMainPages.setCurrentItem(1);
+                break;
+            case R.id.id_appmain_page_module:
+                mMainPages.setCurrentItem(2);
+                break;
         }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
     }
 }

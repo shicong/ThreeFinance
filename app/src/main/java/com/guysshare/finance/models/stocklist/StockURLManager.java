@@ -3,25 +3,58 @@
  */
 package com.guysshare.finance.models.stocklist;
 
+import com.guysshare.managers.GlobalManager;
+
 /**
  * Created by shicong on 2016/7/6.
  */
 public class StockURLManager {
-    private final static String URL_STOCK = "http://hq.sinajs.cn/list=";
 
-    public String getStockURL(String[] stockSids){
-        if (stockSids != null){
-            StringBuilder url = new StringBuilder(URL_STOCK);
-            for (String sid:stockSids) {
-                if (sid.startsWith("000") || sid.startsWith("300")){
-                    url.append("sz" + sid + ",");
-                }else if (sid.startsWith("600")){
-                    url.append("sh" + sid + ",");
-                }
-            }
-            url.deleteCharAt(url.length() - 1);
-            return url.toString();
+    private IStockURLProcess mStockURLProcess;
+    public StockURLManager(StockDataManager.DataType type){
+        switch (type){
+            case TYPE_SINA:
+                mStockURLProcess = new StockURLSina();
+                break;
+            case TYPE_JD:
+                mStockURLProcess = new StockURLJD();
+                break;
         }
-        return null;
     }
+
+
+    public String getOneStockURL(int index) {
+        return mStockURLProcess.getOneStockURL(index);
+    }
+
+    public String getStocksURL(int[] indexs) {
+        return mStockURLProcess.getStocksURL(indexs);
+    }
+
+    public String getOneStockTimeLineURL(int index) {
+        return mStockURLProcess.getOneStockTimeLineURL(index);
+    }
+
+    public String getOneStockDayLineURL(int index) {
+        return mStockURLProcess.getOneStockDayLineURL(index);
+    }
+
+    public String getOneStockWeekLineURL(int index) {
+        return mStockURLProcess.getOneStockWeekLineURL(index);
+    }
+
+    public String getOneStockMonthLineURL(int index) {
+        return mStockURLProcess.getOneStockMonthLineURL(index);
+    }
+
+
+    public interface IStockURLProcess {
+        public String getOneStockURL(int index);
+        public String getStocksURL(int[] indexs);
+        public String getOneStockTimeLineURL(int index);
+        public String getOneStockDayLineURL(int index);
+        public String getOneStockWeekLineURL(int index);
+        public String getOneStockMonthLineURL(int index);
+    }
+
 }

@@ -5,4 +5,17 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
+
+    <string-array name="module_titles">
+        <item>模型1</item>
+        <item>模型2</item>
+        <item>模型3</item>
+    </string-array>
+    <string-array name="module_contents">
+        <item>涨跌幅算术平均</item>
+        <item>涨跌幅与市值的加权平均</item>
+        <item>涨跌幅与成交量的加权平均</item>
+    </string-array>
+
+
 </resources>

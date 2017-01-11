@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2016 Baidu, Inc. All Rights Reserved.
+  -->
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+    <android.support.v4.view.ViewPager
+            android:id="@+id/id_appmain_pages"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="10">
+    </android.support.v4.view.ViewPager>
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_weight="1"
+            android:id="@+id/id_appmain_titles">
+        <Button android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@android:color/white"
+                android:text="自选股"
+                android:id="@+id/id_appmain_page_diy"/>
+        <Button android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="总行情"
+                android:background="@android:color/white"
+                android:id="@+id/id_appmain_page_all"/>
+        <Button android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="模型库"
+                android:background="@android:color/white"
+                android:id="@+id/id_appmain_page_module"/>
+    </LinearLayout>
+</LinearLayout>

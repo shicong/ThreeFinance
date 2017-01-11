@@ -58,4 +58,31 @@ public class DBManager {
         return resultList;
     }
 
+    public String[] getAllSidAndNames(){
+        String[] resultList;
+        SQLiteDatabase db = getStockDB();
+        StringBuilder sql = new StringBuilder("select ");
+        sql.append(DBColumns.DBBaseInfos.DB_STOCK_C0_IDX);
+        sql.append(",");
+        sql.append(DBColumns.DBBaseInfos.DB_STOCK_C1_ID);
+        sql.append(",");
+        sql.append(DBColumns.DBBaseInfos.DB_STOCK_C2_NAME);
+        sql.append(" from ");
+        sql.append(DBColumns.TABLE_BASEINFOS);
+        sql.append(";");
+        Cursor c = db.rawQuery(sql.toString(),null);
+        int resultCnt = c.getCount();
+        if (resultCnt != 0){
+            resultList = new String[resultCnt];
+            c.moveToFirst();
+        }else {
+            return null;
+        }
+        for (int i = 0; i < resultCnt; i++){
+            resultList[i] = c.getInt(0) + "," + c.getString(1) + "," + c.getString(2);
+            c.moveToNext();
+        }
+        db.close();
+        return resultList;
+    }
 }

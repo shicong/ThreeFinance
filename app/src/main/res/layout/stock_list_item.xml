@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2016 Baidu, Inc. All Rights Reserved.
+  -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content">
+
+    <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true">
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/id_stock_list_sname"
+                android:textSize="15sp"
+                android:textColor="@android:color/black"
+                android:layout_gravity="left"
+                android:text="杭氧股份"/>
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/id_stock_list_sid"
+                android:textSize="10sp"
+                android:textColor="@android:color/darker_gray"
+                android:layout_gravity="left"
+                android:text="002430"/>
+
+    </LinearLayout>
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textSize="15sp"
+            android:id="@+id/id_stock_list_currprice"
+            android:textColor="@android:color/black"
+            android:text="9.07"/>
+
+    <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:textSize="15sp"
+            android:background="#FF00FF00"
+            android:id="@+id/id_stock_list_percent"
+            android:textColor="@android:color/white"
+            android:clickable="false"
+            android:focusable="false"
+            android:text="-0.29%"/>
+
+
+</RelativeLayout>

@@ -23,7 +23,23 @@ public class StockBaseData {
     private float mDealGMV;
     private String mDate;
     private String mTime;
+
+    private Double mTotalShares;
+    private Double mNonrestFloatShares;
+    private Double mNonrestFloatA;
+
+    private int mIndex;
     private float mPercent;
+    private String mURL;
+
+
+    public StockBaseData setIndex(int index){
+        mIndex = index;
+        return this;
+    }
+    public int getIndex(){
+        return mIndex;
+    }
 
     public StockBaseData setSID(String sid){
         mSID = sid;
@@ -152,4 +168,37 @@ public class StockBaseData {
     public float getPercent(){
         return mPercent;
     }
+
+    public StockBaseData setURL(String url){
+        mURL = url;
+        return this;
+    }
+    public String getURL(){
+        return mURL;
+    }
+
+    public StockBaseData setTotalShares(Double totalShares){
+        mTotalShares = totalShares;
+        return this;
+    }
+    public Double getTotalShares(){
+        return mTotalShares;
+    }
+
+    public StockBaseData setNonrestFloatShares(Double nonrestFloatShares){
+        mNonrestFloatShares = nonrestFloatShares;
+        return this;
+    }
+    public Double getNonrestFloatShares(){
+        return mNonrestFloatShares;
+    }
+
+    public StockBaseData setNonrestFloatA(Double nonrestFloatA){
+        mNonrestFloatA = nonrestFloatA;
+        return this;
+    }
+    public Double getNonrestFloatA(){
+        return mNonrestFloatA;
+    }
+
 }
